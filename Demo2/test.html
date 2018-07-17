@@ -2,27 +2,90 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Test</title>
+    <script src="../Demo1/modernizr.custom.95790.js"></script>
 </head>
 <body>
 <div>
-    <canvas id="myCanvas" width="300" height="300" style="border: 1px solid black"></canvas>
+    <canvas id="myCanvas" width="500" height="500" style="border: 1px solid black"></canvas>
 </div>
 <script>
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext('2d');
-    ctx.lineWidth = 10;
-    ctx.beginPath();
-    ctx.moveTo(100,100);
-    ctx.lineTo(200,200);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.lineWidth = 20;
-    ctx.moveTo(200,200);
-    ctx.lineTo(0,300);
-    ctx.stroke();
-
-
+    window.addEventListener('load',eventWindowLoaded,false);
+    function eventWindowLoaded() {
+        canvasApp();
+    }
+    function canvasSupport() {
+        return Modernizr.canvas;
+    }
+    CanvasRenderingContext2D.prototype.sector = function (x, y, radius, sDeg, eDeg) {
+// 初始保存
+        this.save();
+// 位移到目标点
+        this.translate(x, y);
+        this.beginPath();
+// 画出圆弧
+        this.arc(0,0,radius,sDeg, eDeg);
+// 再次保存以备旋转
+        this.save();
+// 旋转至起始角度
+        this.rotate(eDeg);
+// 移动到终点，准备连接终点与圆心
+        this.moveTo(radius,0);
+// 连接到圆心
+        this.lineTo(0,0);
+// 还原
+        this.restore();
+// 旋转至起点角度
+        this.rotate(sDeg);
+// 从圆心连接到起点
+        this.lineTo(radius,0);
+        this.closePath();
+// 还原到最初保存的状态
+        this.restore();
+        return this;
+    }
+    function canvasApp() {
+        if (!canvasSupport()) return;
+        function drawScreen() {
+        //     context.fillStyle = '#eeeeee';
+        //     context.fillRect(0,0,theCanvas.width,theCanvas.height);
+        //     context.strokeStyle = '#000000';
+        //     context.strokeRect(1,1,theCanvas.width-2,theCanvas.height-2);
+        //
+        //     ball.velocityx = ball.velocityx - (ball.velocityx*friction);
+        //     ball.velocityy += gravity;
+        //
+        //     if ((ball.y+ball.radius)>theCanvas.height) {
+        //         ball.velocityy = -(ball.velocityy)*ball.elasticity;
+        //     }
+        //
+        //     ball.y += ball.velocityy;
+        //     ball.x += ball.velocityx;
+        //
+        //     context.fillStyle = '#000000';
+        //     context.beginPath();
+        //     context.arc(ball.x,ball.y,ball.radius,0,Math.PI*2,true);
+        //     context.closePath();
+        //     context.fill();
+            var ctx = document.getElementById('myCanvas').getContext('2d');
+            ctx.sector(200,200,100,Math.PI/180*135,Math.PI/180*45).fill();
+        }
+        drawScreen()
+        // var theCanvas = document.getElementById("myCanvas");
+        // var context = theCanvas.getContext('2d');
+        // var speed = 6;
+        // var gravity = .1;
+        // var friction = .008;
+        // var elasticity = .5;
+        // var angle = 285;
+        // var radians = angle*Math.PI/180;
+        // var radius = 15;
+        // var vx = Math.cos(radians)*speed;
+        // var vy = Math.sin(radians)*speed;
+        // var p1 = {x:20,y:theCanvas.width-radius};
+        // var ball = {x:p1.x,y:p1.y,velocityx:vx,velocityy:vy,radius:radius,elasticity:elasticity};
+        // setInterval(drawScreen,33)
+    }
 </script>
 </body>
 </html>

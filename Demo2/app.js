@@ -3,27 +3,42 @@ window.addEventListener('load',canvasApp);
 function canvasApp() {
     var c=document.getElementById("myCanvas");
     var ctx=c.getContext("2d");
-
-    // ctx.lineWidth=10;
-    newRoot(500,700,160,Math.PI/2,0,15);
-    newRoot(495,700,160,Math.PI/2,0,15);
+    newRoot(500,800,160,Math.PI/2,0,20);
+    //theLeft:161 ; theRight: 839; theTop: 93
     function newRoot (x,y,l,o, cnt,lineWidth) {
-        if (cnt > 12) return;
-        var p = Math.random()*2;
+        if (cnt > 6) {
+            return;
+        }
         ctx.beginPath();
         ctx.lineCap = "round";
         ctx.lineWidth = lineWidth;
-        if (cnt > 8) ctx.strokeStyle = 'green';
-        else ctx.strokeStyle = 'black';
         ctx.moveTo(x,y);//根节点
         ctx.lineTo(x+Math.cos(o)*l,y-Math.sin(o)*l);//树干
         ctx.stroke();
-        newRoot(x+Math.cos(o)*l, y-Math.sin(o)*l,4*(l/parseInt(p*2+5)), o+Math.PI/parseInt(p*6+8), cnt + 1,lineWidth-2);
-        newRoot(x+Math.cos(o)*l, y-Math.sin(o)*l,4*(l/parseInt(p*2+5)), o-Math.PI/parseInt(p*6+8), cnt + 1,lineWidth-2);
-        newRoot(x+Math.cos(o)*l, y-Math.sin(o)*l,4*(l/parseInt(p*2+5)), o-Math.PI/parseInt(p*6+8), cnt + 1,lineWidth-2);
-
+        if (cnt > 5) {
+            ctx.beginPath();
+            ctx.arc(x+Math.cos(o)*l,y-Math.sin(o)*l,10,0,2*Math.PI);
+            ctx.fillStyle = 'green';
+            ctx.fill();
+        }
+        newRoot(x+Math.cos(o)*l, y-Math.sin(o)*l,l*0.8, o+Math.PI/7, cnt + 1,lineWidth-2);
+        newRoot(x+Math.cos(o)*l, y-Math.sin(o)*l,l*0.8, o-Math.PI/7, cnt + 1,lineWidth-2);
     }
-
-
+    function newPoint(x,y,R) {
+        for (var i = 0;i < 800;i++){
+            ctx.beginPath();
+            ctx.arc(x+aPoint(R).X,y-aPoint(R).Y,10,0,2*Math.PI);
+            ctx.fillStyle = 'green';
+            ctx.fill();
+        }
+        function aPoint(R) {
+            var r = Math.random()*0.9*R;
+            var o = (Math.random()*11-1)*Math.PI/9;
+            var X = r*Math.cos(o);
+            var Y = r*Math.sin(o);
+            return {X,Y};
+        }
+    }
+    newPoint(500,470,360);
 }
 canvasApp();
